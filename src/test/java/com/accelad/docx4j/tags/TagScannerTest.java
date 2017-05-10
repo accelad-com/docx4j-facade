@@ -29,6 +29,10 @@ public class TagScannerTest {
 
     private static final String TAG_NAME = "tagName";
     private static final String A_PARAGRAPH_WITH_TAG_NAME = "A paragraph ${" + TAG_NAME + "} tagged";
+    private static final String TAG_NAME_WITH_DOT = "tag.name";
+    private static final String TAG_NAME_WITH_PARENTHESIS = "tagnamewithparenthesis()";
+    private static final String TAG_NAME_WITH_QUOTES = "tagname\"double\"and\'simple\'";
+    private static final String TAG_NAME_WITH_NUMBER = "tagNameWithNumber0123456789";
 
     @Mock private Paragraph aParagraph;
 
@@ -65,6 +69,55 @@ public class TagScannerTest {
 
         Tag tag = tags.iterator().next();
         assertThat(tag.getTagName().asString(), is(TAG_NAME));
+    }
+
+    @Test
+    public void should_create_tag_with_correct_tag_name_when_a_paragraph_contains_a_tag_name_with_dot() {
+        Paragraphs paragraphs = new Paragraphs();
+        when(aParagraph.asString()).thenReturn("${" + TAG_NAME_WITH_DOT + "}");
+        paragraphs.add(aParagraph);
+
+        Tags tags = tagScanner.scan(paragraphs);
+
+        Tag tag = tags.iterator().next();
+        assertThat(tag.getTagName().asString(), is(TAG_NAME_WITH_DOT));
+    }
+
+
+    @Test
+    public void should_create_tag_with_correct_tag_name_when_a_paragraph_contains_a_tag_name_with_number() {
+        Paragraphs paragraphs = new Paragraphs();
+        when(aParagraph.asString()).thenReturn("${" + TAG_NAME_WITH_NUMBER + "}");
+        paragraphs.add(aParagraph);
+
+        Tags tags = tagScanner.scan(paragraphs);
+
+        Tag tag = tags.iterator().next();
+        assertThat(tag.getTagName().asString(), is(TAG_NAME_WITH_NUMBER));
+    }
+
+    @Test
+    public void should_create_tag_with_correct_tag_name_when_a_paragraph_contains_a_tag_name_with_parenthesis() {
+        Paragraphs paragraphs = new Paragraphs();
+        when(aParagraph.asString()).thenReturn("${" + TAG_NAME_WITH_PARENTHESIS + "}");
+        paragraphs.add(aParagraph);
+
+        Tags tags = tagScanner.scan(paragraphs);
+
+        Tag tag = tags.iterator().next();
+        assertThat(tag.getTagName().asString(), is(TAG_NAME_WITH_PARENTHESIS));
+    }
+
+    @Test
+    public void should_create_tag_with_correct_tag_name_when_a_paragraph_contains_a_tag_name_with_quote() {
+        Paragraphs paragraphs = new Paragraphs();
+        when(aParagraph.asString()).thenReturn("${" + TAG_NAME_WITH_QUOTES + "}");
+        paragraphs.add(aParagraph);
+
+        Tags tags = tagScanner.scan(paragraphs);
+
+        Tag tag = tags.iterator().next();
+        assertThat(tag.getTagName().asString(), is(TAG_NAME_WITH_QUOTES));
     }
 
     @Test

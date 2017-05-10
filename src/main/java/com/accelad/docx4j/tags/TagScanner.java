@@ -15,7 +15,7 @@ public class TagScanner {
     private static final String TAG_START = "${";
     private static final String TAG_END = "}";
 
-    private static final String REGEX = "(\\$\\{[a-zA-Z]*\\})";
+    private static final String REGEX = "(\\$\\{[^}]*\\})";
     private static final Pattern PATTERN = Pattern.compile(REGEX);
 
     public Tags scan(Paragraphs paragraphs) {
