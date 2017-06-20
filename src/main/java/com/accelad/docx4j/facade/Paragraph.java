@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.docx4j.jaxb.Context;
+import org.docx4j.wml.ContentAccessor;
 import org.docx4j.wml.ObjectFactory;
 import org.docx4j.wml.P;
 import org.docx4j.wml.ProofErr;
@@ -68,9 +69,7 @@ public class Paragraph implements WordItem, WordItemContainer {
             } else if (obj instanceof ProofErr) {
                 ProofErr err = (ProofErr) obj;
                 items.add(new ProofError(err));
-            }
-
-            else {
+            } else {
                 throw new IllegalArgumentException(
                         "Not supported yet :" + obj.getClass().getName());
             }
@@ -125,12 +124,31 @@ public class Paragraph implements WordItem, WordItemContainer {
         p.setPPr(properties.asDocx4JObject());
     }
 
-    @SuppressWarnings({ "unchecked" })
     public void addItemInTheParentContainer(WordItem item) {
-        List<Object> list = (List<Object>) p.getParent();
+        List<Object> list = getObjects(p);
         int pos = list.indexOf(p);
         Object itemAsDocx4JObject = item.asDocx4JObject();
         list.add(pos, itemAsDocx4JObject);
+    }
+
+    private static List<Object> getObjects(P p) {
+        Object parent = p.getParent();
+        if (isInATable(parent)) {
+            return ((ContentAccessor) parent).getContent();
+        } else if (isInANormalParagraph(parent)) {
+            return (List) parent;
+        } else {
+            throw new IllegalArgumentException(
+                    "p has an unknown type:" + p.getClass().getCanonicalName());
+        }
+    }
+
+    private static boolean isInANormalParagraph(Object parent) {
+        return parent instanceof List;
+    }
+
+    private static boolean isInATable(Object parent) {
+        return parent instanceof ContentAccessor;
     }
 
 }
