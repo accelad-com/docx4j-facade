@@ -1,5 +1,7 @@
 package com.accelad.docx4j.tags;
 
+import java.util.Arrays;
+
 public class TagValueTable implements TagValue {
 
     private final String title;
@@ -45,5 +47,32 @@ public class TagValueTable implements TagValue {
 
     public TableHeaderGroup[] getHeaderGroups() {
         return this.headerGroups;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        TagValueTable that = (TagValueTable) o;
+
+        if (title != null ? !title.equals(that.title) : that.title != null)
+            return false;
+        if (!Arrays.equals(headers, that.headers))
+            return false;
+        if (!Arrays.equals(headerGroups, that.headerGroups))
+            return false;
+        return Arrays.deepEquals(tableValues, that.tableValues);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = title != null ? title.hashCode() : 0;
+        result = 31 * result + Arrays.hashCode(headers);
+        result = 31 * result + Arrays.hashCode(headerGroups);
+        result = 31 * result + Arrays.deepHashCode(tableValues);
+        return result;
     }
 }
