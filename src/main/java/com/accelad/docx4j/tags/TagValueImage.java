@@ -17,4 +17,20 @@ public class TagValueImage implements TagValue {
         visitor.visit(this);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        TagValueImage that = (TagValueImage) o;
+
+        return image != null ? image.equals(that.image) : that.image == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return image != null ? image.hashCode() : 0;
+    }
 }
