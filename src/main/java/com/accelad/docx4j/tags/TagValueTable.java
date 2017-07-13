@@ -1,5 +1,8 @@
 package com.accelad.docx4j.tags;
 
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
+
 import java.util.Arrays;
 
 public class TagValueTable implements TagValue {
@@ -13,7 +16,8 @@ public class TagValueTable implements TagValue {
         this(title, headers, null, tableValues);
     }
 
-    public TagValueTable(String title, String[] headers, TableHeaderGroup[] headerGroups, String[][] tableValues) {
+    public TagValueTable(String title, String[] headers, TableHeaderGroup[] headerGroups,
+            String[][] tableValues) {
         this.headerGroups = headerGroups;
         this.tableValues = tableValues;
         this.title = title;
@@ -74,5 +78,16 @@ public class TagValueTable implements TagValue {
         result = 31 * result + Arrays.hashCode(headerGroups);
         result = 31 * result + Arrays.deepHashCode(tableValues);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "TagValueTable{" + "title='" + title + '\'' + ", headers=" + Arrays.toString(
+                headers) + ", headerGroups=" + Arrays.toString(
+                headerGroups) + ", tableValues=" + valuesToString() + '}';
+    }
+
+    private String valuesToString() {
+        return stream(tableValues).map(Arrays::toString).collect(joining(", "));
     }
 }

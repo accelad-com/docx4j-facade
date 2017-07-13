@@ -13,13 +13,10 @@ import org.mockito.Mock;
 import com.accelad.docx4j.facade.IndexedWordItems;
 import com.accelad.docx4j.facade.Paragraph;
 import com.accelad.docx4j.facade.Table;
-import com.accelad.docx4j.tags.Tag;
-import com.accelad.docx4j.tags.TagName;
-import com.accelad.docx4j.tags.TagUpdaterTable;
-import com.accelad.docx4j.tags.TagValueTable;
 
 public class TagUpdaterTableTest {
-    private static final TagValueTable TAG_VALUE = new TagValueTable("My title", new String[] {}, new String[][] {});
+    private static final TagValueTable TAG_VALUE = new TagValueTable("My title", new String[] {},
+            new String[][] {});
 
     @Mock private Paragraph container;
     private IndexedWordItems itemsToReplace = new IndexedWordItems();
