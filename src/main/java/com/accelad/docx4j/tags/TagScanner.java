@@ -16,7 +16,15 @@ public class TagScanner {
     private static final String TAG_END = "}";
 
     private static final String REGEX = "(\\$\\{[^}]*\\})";
-    private static final Pattern PATTERN = Pattern.compile(REGEX);
+    private final Pattern PATTERN;
+
+    public TagScanner() {
+        PATTERN = Pattern.compile(REGEX);
+    }
+
+    public TagScanner(String regex) {
+        PATTERN = Pattern.compile(regex);
+    }
 
     public Tags scan(Paragraphs paragraphs) {
         Tags tags = new Tags();

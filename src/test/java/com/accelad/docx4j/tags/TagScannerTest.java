@@ -72,6 +72,18 @@ public class TagScannerTest {
     }
 
     @Test
+    public void should_recognize_a_different_tag_format_when_a_different_regex_is_given() {
+        Paragraphs paragraphs = new Paragraphs();
+        when(aParagraph.asString()).thenReturn("%[" + TAG_NAME + "]");
+        paragraphs.add(aParagraph);
+
+        Tags tags = new TagScanner("((\\%\\[[^\\]]*\\]))").scan(paragraphs);
+
+        Tag tag = tags.iterator().next();
+        assertThat(tag.getTagName().asString(), is(TAG_NAME));
+    }
+
+    @Test
     public void should_create_tag_with_correct_tag_name_when_a_paragraph_contains_a_tag_name_with_dot() {
         Paragraphs paragraphs = new Paragraphs();
         when(aParagraph.asString()).thenReturn("${" + TAG_NAME_WITH_DOT + "}");
