@@ -29,4 +29,11 @@ public class Tags implements Iterable<Tag> {
         return list.iterator();
     }
 
+    public boolean contains(Tag tag) {
+        return list.contains(tag);
+    }
+
+    public boolean isEmpty() {
+        return list.isEmpty();
+    }
 }

@@ -63,13 +63,13 @@ public class TagScanner {
             if (match.matches()) {
                 items.put(item, position);
             } else {
-                if (txt.equals(TAG_START)) {
+                if (txt.startsWith(TAG_START)) {
                     started = true;
                 }
                 if (started) {
                     items.put(item, position);
                 }
-                if (started && txt.equals(TAG_END)) {
+                if (started && txt.endsWith(TAG_END)) {
                     started = false;
                 }
             }
