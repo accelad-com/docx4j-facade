@@ -1,18 +1,9 @@
 package com.accelad.docx4j.tags;
 
+import com.accelad.docx4j.facade.*;
 import org.apache.commons.lang3.StringUtils;
 
-import com.accelad.docx4j.facade.Alignment;
-import com.accelad.docx4j.facade.HorizontalMerge;
-import com.accelad.docx4j.facade.Paragraph;
-import com.accelad.docx4j.facade.Table;
-import com.accelad.docx4j.facade.TableBorders;
-import com.accelad.docx4j.facade.TableCell;
-import com.accelad.docx4j.facade.TableCellWidth;
-import com.accelad.docx4j.facade.TableGrid;
-import com.accelad.docx4j.facade.TableGridColumn;
-import com.accelad.docx4j.facade.TableProperties;
-import com.accelad.docx4j.facade.TableRow;
+import java.util.List;
 
 public class TagUpdaterTable implements TagValueUpdater {
     private final TagValueTable valueTable;
@@ -26,7 +17,7 @@ public class TagUpdaterTable implements TagValueUpdater {
     public boolean update(Tag tag) {
         Paragraph container = tag.getParagraph();
 
-        String[][] value = valueTable.getValue();
+        List<TagValueTableRow> value = valueTable.getRows();
 
         int columnCount = valueTable.getColumnCount();
 
@@ -40,9 +31,9 @@ public class TagUpdaterTable implements TagValueUpdater {
         int rowCount = valueTable.getRowCount();
         for (int i = 0; i < rowCount; i++) {
             TableRow row = new TableRow();
-            String[] rowValues = value[i];
+            TagValueTableRow rowValues = value.get(i);
 
-            for (String cellValue : rowValues) {
+            for (TagValueTableCell cellValue : rowValues) {
                 row.addCell(TableCell.builder()
                         .withText(cellValue)
                         .withAlignment(Alignment.CENTER)
@@ -60,10 +51,10 @@ public class TagUpdaterTable implements TagValueUpdater {
     }
 
 
-    private TableRow createHeaders(String[] headers) { // NOSONAR
+    private TableRow createHeaders(TagValueTableRow headers) {
         TableRow headerRow = new TableRow();
 
-        for (String header : headers) {
+        for (TagValueTableCell header : headers) {
             headerRow.addCell(TableCell.builder()
                     .withText(header)
                     .withAlignment(Alignment.CENTER)
@@ -93,12 +84,11 @@ public class TagUpdaterTable implements TagValueUpdater {
 
         TableHeaderGroup[] groups = valueTable.getHeaderGroups();
 
-        for (int g=0; g < groups.length; g++) {
-            TableHeaderGroup group = groups[g];
-
+        for (TableHeaderGroup group : groups) {
             TableCell.TableCellBuilder builder = TableCell.builder();
             if (!StringUtils.isEmpty(group.getTitle())) {
-                    builder.withText(group.getTitle()).withAlignment(Alignment.CENTER);
+                    builder.withText(group.getTitle())
+                            .withAlignment(Alignment.CENTER);
             }
             titleRow.addCell(builder.withMerge(HorizontalMerge.RESTART).build());
 
