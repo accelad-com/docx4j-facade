@@ -25,4 +25,10 @@ public interface WordProcessor {
 
     void replaceBy(WordItemContainer container, WordItems items, WordItem item);
 
+    void clearBodyContent();
+
+    void mergeContentWith(WordProcessor processor);
+
+    List<Object> getContent();
+
 }
