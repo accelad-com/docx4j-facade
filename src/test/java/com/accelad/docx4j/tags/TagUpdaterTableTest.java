@@ -14,9 +14,11 @@ import com.accelad.docx4j.facade.IndexedWordItems;
 import com.accelad.docx4j.facade.Paragraph;
 import com.accelad.docx4j.facade.Table;
 
+import java.util.Collections;
+
 public class TagUpdaterTableTest {
-    private static final TagValueTable TAG_VALUE = new TagValueTable("My title", new String[] {},
-            new String[][] {});
+    private static final TagValueTable TAG_VALUE = new TagValueTable("My title", new TagValueTableRow(),
+            Collections.emptyList());
 
     @Mock private Paragraph container;
     private IndexedWordItems itemsToReplace = new IndexedWordItems();

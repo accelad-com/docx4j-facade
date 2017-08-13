@@ -1,43 +1,43 @@
 package com.accelad.docx4j.tags;
 
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.joining;
-
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
 
 public class TagValueTable implements TagValue {
 
     private final String title;
-    private final String[] headers;
+    private final TagValueTableRow headers;
     private final TableHeaderGroup[] headerGroups;
-    private final String[][] tableValues;
+    private final List<TagValueTableRow> tableValues;
 
-    public TagValueTable(String title, String[] headers, String[][] tableValues) {
+    public TagValueTable(String title, TagValueTableRow headers, List<TagValueTableRow> tableValues) {
         this(title, headers, null, tableValues);
     }
 
-    public TagValueTable(String title, String[] headers, TableHeaderGroup[] headerGroups,
-            String[][] tableValues) {
+    public TagValueTable(String title, TagValueTableRow headers, TableHeaderGroup[] headerGroups,
+                         List<TagValueTableRow> tableValues) {
         this.headerGroups = headerGroups;
         this.tableValues = tableValues;
         this.title = title;
         this.headers = headers;
     }
 
-    public String[] getHeaders() {
+    public TagValueTableRow getHeaders() {
         return headers;
     }
 
-    public String[][] getValue() {
+    public List<TagValueTableRow> getRows() {
         return tableValues;
     }
 
     public int getColumnCount() {
-        return headers.length;
+        return headers.size();
     }
 
     public int getRowCount() {
-        return tableValues.length;
+        return tableValues.size();
     }
 
     public String getTitle() {
@@ -55,39 +55,27 @@ public class TagValueTable implements TagValue {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         TagValueTable that = (TagValueTable) o;
-
-        if (title != null ? !title.equals(that.title) : that.title != null)
-            return false;
-        if (!Arrays.equals(headers, that.headers))
-            return false;
-        if (!Arrays.equals(headerGroups, that.headerGroups))
-            return false;
-        return Arrays.deepEquals(tableValues, that.tableValues);
+        return Objects.equals(title, that.title) &&
+                Objects.equals(headers, that.headers) &&
+                Arrays.equals(headerGroups, that.headerGroups) &&
+                Objects.equals(tableValues, that.tableValues);
     }
 
     @Override
     public int hashCode() {
-        int result = title != null ? title.hashCode() : 0;
-        result = 31 * result + Arrays.hashCode(headers);
-        result = 31 * result + Arrays.hashCode(headerGroups);
-        result = 31 * result + Arrays.deepHashCode(tableValues);
-        return result;
+        return Objects.hash(title, headers, headerGroups, tableValues);
     }
 
     @Override
     public String toString() {
-        return "TagValueTable{" + "title='" + title + '\'' + ", headers=" + Arrays.toString(
-                headers) + ", headerGroups=" + Arrays.toString(
-                headerGroups) + ", tableValues=" + valuesToString() + '}';
-    }
-
-    private String valuesToString() {
-        return stream(tableValues).map(Arrays::toString).collect(joining(", "));
+        return "TagValueTable{" +
+                "title='" + title + '\'' +
+                ", headers=" + headers +
+                ", headerGroups=" + Arrays.toString(headerGroups) +
+                ", tableValues=" + tableValues +
+                '}';
     }
 }

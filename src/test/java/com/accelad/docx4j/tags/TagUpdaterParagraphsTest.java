@@ -1,5 +1,6 @@
 package com.accelad.docx4j.tags;
 
+import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyInt;
@@ -11,6 +12,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.docx4j.wml.P;
@@ -31,7 +33,9 @@ import com.accelad.docx4j.tags.TagValueTable;
 
 public class TagUpdaterParagraphsTest {
 
-    private static final TagValueTable TAG_VALUE_TABLE = new TagValueTable("Title", new String[] {"1", "2"}, new String[][] {{"1a", "2a"}});
+    private static final TagValueTable TAG_VALUE_TABLE = new TagValueTable("Title",
+            new TagValueTableRow("1", "2"),
+            singletonList(new TagValueTableRow("1a", "2a")));
     public static final TagValueString TAG_VALUE_STRING = new TagValueString("TEST");
     private static final TagValue[] TAG_VALUE_CONTENTS = new TagValue[] {TAG_VALUE_TABLE, TAG_VALUE_STRING};
     private static final TagValueBlock TAG_VALUE = new TagValueBlock(TAG_VALUE_CONTENTS);

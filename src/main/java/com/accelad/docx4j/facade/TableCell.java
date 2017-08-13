@@ -1,5 +1,6 @@
 package com.accelad.docx4j.facade;
 
+import com.accelad.docx4j.tags.TagValueTableCell;
 import org.docx4j.jaxb.Context;
 import org.docx4j.wml.ObjectFactory;
 import org.docx4j.wml.Tc;
@@ -35,13 +36,18 @@ public class TableCell implements WordItem {
     }
 
     public static class TableCellBuilder {
-        private String text = "";
+        private String cellValue = "";
         private Integer width;
         private HorizontalMerge merge;
         private Alignment alignment;
 
-        public TableCellBuilder withText(String text) {
-            this.text = text;
+        public TableCellBuilder withText(String cellValue) {
+            this.cellValue = cellValue;
+            return this;
+        }
+
+        public TableCellBuilder withText(TagValueTableCell cell) {
+            this.cellValue = cell.toString();
             return this;
         }
 
@@ -65,7 +71,7 @@ public class TableCell implements WordItem {
             TableCell cell = new TableCell();
             Paragraph paragraph = new Paragraph();
             Run run = new Run();
-            run.addText(new Text(text));
+            run.addText(new Text(cellValue));
             paragraph.addItem(run);
             if (alignment != null) {
                 ParagraphProperties properties = new ParagraphProperties();
