@@ -2,6 +2,7 @@ package com.accelad.docx4j.facade;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.mock;
@@ -9,9 +10,11 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.docx4j.dml.wordprocessingDrawing.Inline;
+import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.BinaryPartAbstractImage;
 import org.docx4j.openpackaging.parts.WordprocessingML.FooterPart;
@@ -20,22 +23,18 @@ import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.Drawing;
 import org.docx4j.wml.Ftr;
 import org.docx4j.wml.Hdr;
+import org.docx4j.wml.P;
 import org.docx4j.wml.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.accelad.docx4j.facade.Paragraph;
-import com.accelad.docx4j.facade.Paragraphs;
-import com.accelad.docx4j.facade.ProcessorHelper;
-import com.accelad.docx4j.facade.Run;
-import com.accelad.docx4j.facade.WordProcessorDocx4J;
-
 public class WordProcessorDocx4JTest {
+    static org.docx4j.wml.ObjectFactory factory = Context.getWmlObjectFactory();
 
     @Mock WordprocessingMLPackage mlPackage;
     @Mock MainDocumentPart documentPart;
-    WordProcessorDocx4J processor;
+    private WordProcessor processor;
     @Mock ProcessorHelper processorHelper;
 
     @Before
@@ -136,6 +135,59 @@ public class WordProcessorDocx4JTest {
         List<Object> content = r.getContent();
         Drawing actual = (Drawing) content.get(0);
         assertThat(actual.getAnchorOrInline(), containsInAnyOrder(inline));
+    }
+
+    @Test
+    public void should_return_the_items_contains_in_the_body() throws Exception {
+        List<Object> objects = new ArrayList<>();
+
+        Paragraph paragraph = new Paragraph();
+        Run run = new Run();
+        objects.add(paragraph.asDocx4JObject());
+        objects.add(run.asDocx4JObject());
+        when(documentPart.getContent()).thenReturn(objects);
+
+        List<Object> bodyContent = processor.getContent();
+
+        assertThat(bodyContent, equalTo(objects));
+    }
+
+    @Test
+    public void should_not_contains_any_body_element_after_clearing() throws Exception {
+        WordprocessingMLPackage mlPackage = WordprocessingMLPackage.createPackage();
+        mlPackage.getMainDocumentPart().getContent().add(new P());
+
+        WordProcessor processor = new WordProcessorDocx4J(mlPackage);
+
+        processor.clearBodyContent();
+
+        List<Object> bodyContent = processor.getContent();
+        assertThat(bodyContent.isEmpty(), equalTo(true));
+    }
+
+    @Test
+    public void should_return_a_processor_with_content_merged_with_content_from_another_processor()
+            throws Exception {
+        List<Object> originalContent = new ArrayList<>();
+
+        Paragraph paragraph = new Paragraph();
+        Run run = new Run();
+        originalContent.add(paragraph.asDocx4JObject());
+        originalContent.add(run.asDocx4JObject());
+        when(documentPart.getContent()).thenReturn(originalContent);
+
+        WordprocessingMLPackage mlPackageToMerge = mock(WordprocessingMLPackage.class);
+        MainDocumentPart documentPartToMerge = mock(MainDocumentPart.class);
+        List<Object> contentToMerge = Collections.singletonList(new Paragraph().asDocx4JObject());
+        when(documentPartToMerge.getContent()).thenReturn(contentToMerge);
+        when(mlPackageToMerge.getMainDocumentPart()).thenReturn(documentPartToMerge);
+        WordProcessor processorToMerge = new WordProcessorDocx4J(mlPackageToMerge);
+        processor.mergeContentWith(processorToMerge);
+
+        List<Object> returnedBodyContent = processor.getContent();
+
+        assertThat(returnedBodyContent.containsAll(originalContent), equalTo(true));
+        assertThat(returnedBodyContent.containsAll(contentToMerge), equalTo(true));
     }
 
 }

@@ -140,7 +140,18 @@ public class WordProcessorDocx4J implements WordProcessor {
         container.addItem(item, position);
     }
 
-    private List<Object> getContent() {
+    @Override
+    public void clearBodyContent() {
+        wordprocessingMLPackage.getMainDocumentPart().getContent().clear();
+    }
+
+    @Override
+    public List<Object> getContent() {
         return wordprocessingMLPackage.getMainDocumentPart().getContent();
+    }
+
+    @Override
+    public void mergeContentWith(WordProcessor processor) {
+        wordprocessingMLPackage.getMainDocumentPart().getContent().addAll(processor.getContent());
     }
 }
