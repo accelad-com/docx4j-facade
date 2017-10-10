@@ -11,7 +11,7 @@ public class TagValueTableRow implements Iterable<TagValueTableCell>{
     }
 
     public TagValueTableRow(String... values){
-        this.values = Arrays.stream(values).map(TagValueTableCell::new).collect(Collectors.toList());
+        this.values = Arrays.stream(values).map(value -> new TagValueTableCell(value, 100/values.length, "auto")).collect(Collectors.toList());
     }
 
     public TagValueTableRow(TagValueTableCell... cells){

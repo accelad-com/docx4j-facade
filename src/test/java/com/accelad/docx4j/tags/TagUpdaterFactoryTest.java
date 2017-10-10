@@ -1,27 +1,16 @@
 package com.accelad.docx4j.tags;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.typeCompatibleWith;
-import static org.mockito.MockitoAnnotations.initMocks;
-
+import com.accelad.docx4j.facade.WordProcessor;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.accelad.docx4j.facade.WordProcessor;
-import com.accelad.docx4j.tags.ReportImage;
-import com.accelad.docx4j.tags.TagUpdaterFactory;
-import com.accelad.docx4j.tags.TagUpdaterImage;
-import com.accelad.docx4j.tags.TagUpdaterString;
-import com.accelad.docx4j.tags.TagUpdaterTable;
-import com.accelad.docx4j.tags.TagValue;
-import com.accelad.docx4j.tags.TagValueImage;
-import com.accelad.docx4j.tags.TagValueString;
-import com.accelad.docx4j.tags.TagValueTable;
-import com.accelad.docx4j.tags.TagValueUpdater;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.typeCompatibleWith;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class TagUpdaterFactoryTest {
-    
+    private static int columnWidth = 1000;
     @Mock WordProcessor processor;
      
     @Before
@@ -54,7 +43,7 @@ public class TagUpdaterFactoryTest {
             throws Exception {
         TagUpdaterFactory factory = new TagUpdaterFactory(processor);
 
-        TagValue value = new TagValueTable("title", null, null);
+        TagValue value = new TagValueTable("title", null, null, columnWidth);
         TagValueUpdater updater = factory.getUpdater(value);
         assertThat(updater.getClass(),
                 typeCompatibleWith(TagUpdaterTable.class));

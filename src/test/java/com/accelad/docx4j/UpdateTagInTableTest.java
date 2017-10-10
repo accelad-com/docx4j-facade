@@ -1,12 +1,8 @@
 package com.accelad.docx4j;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
-
+import com.accelad.docx4j.facade.Paragraphs;
+import com.accelad.docx4j.facade.WordProcessor;
+import com.accelad.docx4j.facade.WordProcessorDocx4J;
 import com.accelad.docx4j.tags.*;
 import org.apache.commons.io.IOUtils;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
@@ -14,12 +10,15 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.accelad.docx4j.facade.Paragraphs;
-import com.accelad.docx4j.facade.WordProcessor;
-import com.accelad.docx4j.facade.WordProcessorDocx4J;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 public class UpdateTagInTableTest {
-
+    private static int columnWidth = 1000;
     private WordprocessingMLPackage wordprocessingMLPackageWithTable;
     private Tag tag;
 
@@ -66,7 +65,7 @@ public class UpdateTagInTableTest {
         TagValueTableRow headers = new TagValueTableRow("header1", "header2" );
         List<TagValueTableRow> values = Arrays.asList( new TagValueTableRow( "values11", "values12" ),
                 new TagValueTableRow( "values21", "values22" ) );
-        TagValue key = new TagValueTable("the title", headers, values);
+        TagValue key = new TagValueTable("the title", headers, values, columnWidth);
         TagUpdater updater = getTagUpdaterForTagValue(wordprocessingMLPackageWithTable, key);
 
         boolean isUpdated = updater.update(tag);

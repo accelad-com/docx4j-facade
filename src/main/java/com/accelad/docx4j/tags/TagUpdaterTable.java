@@ -3,6 +3,7 @@ package com.accelad.docx4j.tags;
 import com.accelad.docx4j.facade.*;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TagUpdaterTable implements TagValueUpdater {
@@ -21,7 +22,12 @@ public class TagUpdaterTable implements TagValueUpdater {
 
         int columnCount = valueTable.getColumnCount();
 
-        Table table = createTable();
+        ArrayList<TableGridColumn> tableGridColumns = new ArrayList<>();
+        for (int i=0; i<columnCount; i++){
+            tableGridColumns.add(new TableGridColumn(valueTable.getColumnWidth()));
+        }
+
+        Table table = createTable(tableGridColumns);
         table.addRow(createTitle(columnCount));
         if (valueTable.getHeaderGroups() != null) {
             table.addRow(createTitleGroup());
@@ -37,7 +43,7 @@ public class TagUpdaterTable implements TagValueUpdater {
                 row.addCell(TableCell.builder()
                         .withText(cellValue)
                         .withAlignment(Alignment.CENTER)
-                        .withWidth(800)
+                        .withWidth(new TableCellWidth(cellValue.getWidthInPercent(), cellValue.getType()))
                         .build());
             }
 
@@ -101,10 +107,10 @@ public class TagUpdaterTable implements TagValueUpdater {
         return titleRow;
     }
 
-    private Table createTable() {
+    private Table createTable(List<TableGridColumn> columns) {
         Table table = new Table();
         TableProperties tableProperties = new TableProperties();
-        tableProperties.setWidth(new TableCellWidth(5000, "pct"));
+        tableProperties.setWidth(new TableCellWidth(100, "auto"));
 
         tableProperties.setBorders(TableBorders.builder()
                 .withTop(4)
@@ -118,7 +124,10 @@ public class TagUpdaterTable implements TagValueUpdater {
         table.setProperties(tableProperties);
 
         TableGrid grid = new TableGrid();
-        grid.addGridColumn(new TableGridColumn(10296));
+        for (TableGridColumn column : columns) {
+            grid.addGridColumn(column);
+        }
+
         table.setGrid(grid);
         return table;
     }

@@ -37,7 +37,7 @@ public class TableCell implements WordItem {
 
     public static class TableCellBuilder {
         private String cellValue = "";
-        private Integer width;
+        private TableCellWidth width;
         private HorizontalMerge merge;
         private Alignment alignment;
 
@@ -56,7 +56,7 @@ public class TableCell implements WordItem {
             return this;
         }
 
-        public TableCellBuilder withWidth(Integer width) {
+        public TableCellBuilder withWidth(TableCellWidth width) {
             this.width = width;
             return this;
         }
@@ -83,7 +83,7 @@ public class TableCell implements WordItem {
 
             TableCellProperties properties = new TableCellProperties();
             if (width != null) {
-                properties.setWidth(new TableCellWidth(width, "pct"));
+                properties.setWidth(width);
             }
 
             if (merge != null) {

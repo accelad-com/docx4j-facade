@@ -11,17 +11,19 @@ public class TagValueTable implements TagValue {
     private final TagValueTableRow headers;
     private final TableHeaderGroup[] headerGroups;
     private final List<TagValueTableRow> tableValues;
+    private final int columnWidth;
 
-    public TagValueTable(String title, TagValueTableRow headers, List<TagValueTableRow> tableValues) {
-        this(title, headers, null, tableValues);
+    public TagValueTable(String title, TagValueTableRow headers, List<TagValueTableRow> tableValues, int columnWidth) {
+        this(title, headers, null, tableValues, columnWidth);
     }
 
     public TagValueTable(String title, TagValueTableRow headers, TableHeaderGroup[] headerGroups,
-                         List<TagValueTableRow> tableValues) {
+                         List<TagValueTableRow> tableValues, int columnWidth) {
         this.headerGroups = headerGroups;
         this.tableValues = tableValues;
         this.title = title;
         this.headers = headers;
+        this.columnWidth = columnWidth;
     }
 
     public TagValueTableRow getHeaders() {
@@ -42,6 +44,10 @@ public class TagValueTable implements TagValue {
 
     public String getTitle() {
         return title;
+    }
+
+    public int getColumnWidth() {
+        return columnWidth;
     }
 
     @Override

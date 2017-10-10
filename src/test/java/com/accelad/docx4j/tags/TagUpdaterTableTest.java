@@ -1,24 +1,25 @@
 package com.accelad.docx4j.tags;
 
+import com.accelad.docx4j.facade.IndexedWordItems;
+import com.accelad.docx4j.facade.Paragraph;
+import com.accelad.docx4j.facade.Table;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+
+import java.util.Collections;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-
-import com.accelad.docx4j.facade.IndexedWordItems;
-import com.accelad.docx4j.facade.Paragraph;
-import com.accelad.docx4j.facade.Table;
-
-import java.util.Collections;
-
 public class TagUpdaterTableTest {
+    private static int columnWidth = 1000;
+
     private static final TagValueTable TAG_VALUE = new TagValueTable("My title", new TagValueTableRow(),
-            Collections.emptyList());
+            Collections.emptyList(), columnWidth);
 
     @Mock private Paragraph container;
     private IndexedWordItems itemsToReplace = new IndexedWordItems();
